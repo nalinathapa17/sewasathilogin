@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SewaSathy — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:       #1a6ef5;
+  --blue-dark:  #1055cc;
+  --blue-light: #5a9dff;
+  --orange:     #ff7a1a;
+  --orange-dark:#e05f00;
+  --orange-lt:  #ffaa5a;
+  --white:      #ffffff;
+  --bg-dark:    #0b1a3d;
+  --text:       #0d1f4a;
+  --text-muted: #5a6e99;
+  --input-bg:   #f0f5ff;
+  --input-bdr:  #c8d8f8;
+  --toggle-bg:  #e4eeff;
+}
+
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: #0b1a3d; overflow: hidden; }
+.page-wrapper { display: flex; height: 100vh; width: 100vw; }
+
+/* LEFT PANEL */
+.left-panel {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 48px;
+}
+
+.left-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, #0d2d8a 0%, #0b1a3d 55%),
+    radial-gradient(ellipse at 85% 85%, #1a2a5e 0%, transparent 55%),
+    radial-gradient(ellipse at 60% 40%, rgba(255,122,26,0.06) 0%, transparent 60%);
+  z-index: 0;
+}
+
+/* Subtle grid */
+.grid-overlay {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(26,110,245,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,110,245,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Cinematic light rays */
+.light-rays { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.ray {
+  position: absolute; top: -10%; width: 2px; height: 140%;
+  background: linear-gradient(to bottom, transparent, rgba(26,110,245,0.06), transparent);
+  animation: ray-sweep 8s ease-in-out infinite;
+  transform-origin: top center;
+}
+.ray:nth-child(1) { left: 15%; animation-delay: 0s; width: 60px; }
+.ray:nth-child(2) { left: 35%; animation-delay: 2s; width: 40px; background: linear-gradient(to bottom, transparent, rgba(255,122,26,0.04), transparent); }
+.ray:nth-child(3) { left: 55%; animation-delay: 4s; width: 80px; }
+.ray:nth-child(4) { left: 75%; animation-delay: 1s; width: 50px; }
+
+.bubbles { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.bubble { position: absolute; border-radius: 50%; animation: bubble-rise linear infinite; opacity: 0; }
+
+.dust { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.dust-dot { position: absolute; width: 4px; height: 4px; border-radius: 50%; animation: dust-twinkle 2.5s ease-in-out infinite; }
+
+/* Brand */
+.brand {
+  position: absolute; top: 32px; left: 36px;
+  z-index: 20; display: flex; align-items: center; gap: 10px;
+}
+.brand-icon {
+  width: 40px; height: 40px; background: var(--orange); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(255,122,26,0.5);
+}
+.brand-icon svg { width: 22px; height: 22px; }
+.brand-name { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.3px; }
+.brand-name span { color: var(--orange); }
+
+/* Nepal trusted badge */
+.nepal-badge {
+  position: absolute; top: 30px; right: 28px; z-index: 20;
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px); border-radius: 50px; padding: 7px 14px;
+  animation: fade-in-down 1.2s 0.5s ease both;
+}
+.nepal-badge .flag { font-size: 16px; }
+.nepal-badge .badge-text { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.85); }
+.nepal-badge .badge-sub { font-size: 10px; color: rgba(255,255,255,0.45); }
+
+/* Hero text */
+.hero-text { position: relative; z-index: 20; text-align: center; max-width: 440px; padding: 0 20px; }
+.hero-headline {
+  font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900;
+  line-height: 1.22; margin-bottom: 11px; color: #fff;
+  animation: fade-up 1s 0.3s ease both;
+}
+.hero-headline em { font-style: normal; color: var(--orange); }
+.hero-tagline {
+  font-size: 12.5px; color: rgba(255,255,255,0.52); line-height: 1.75; margin-bottom: 16px;
+  animation: fade-up 1s 0.5s ease both; max-width: 360px; margin-left: auto; margin-right: auto;
+}
+.service-chips {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 7px;
+  animation: fade-up 1s 0.7s ease both;
+}
+.chip {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 50px; padding: 5px 12px; font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.72); display: flex; align-items: center; gap: 5px;
+}
+.chip span { font-size: 12px; }
+
+/* Bottom strip */
+.trusted-strip {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+  padding: 9px 24px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(90deg, transparent, rgba(26,110,245,0.1), rgba(255,122,26,0.08), transparent);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.trusted-strip .ts-label { font-size: 10.5px; color: rgba(255,255,255,0.33); font-weight: 500; letter-spacing: 0.4px; text-transform: uppercase; }
+.trusted-star { color: #ffaa5a; font-size: 11px; }
+
+/* Scene */
+.scene-wrap {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; top: -30px;
+}
+
+/* RIGHT PANEL — UNCHANGED */
+.right-panel {
+  width: 510px; min-width: 460px; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  padding: 44px 50px; position: relative; overflow: hidden; flex-direction: column;
+}
+.right-panel::before {
+  content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(26,110,245,0.07), transparent 70%); pointer-events: none;
+}
+.right-panel::after {
+  content: ''; position: absolute; bottom: -50px; left: -50px; width: 180px; height: 180px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,122,26,0.07), transparent 70%); pointer-events: none;
+}
+.rp-accent { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--blue), var(--orange)); }
+.back-btn {
+  position: absolute; top: 26px; left: 26px; width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid var(--input-bdr); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; color: var(--text-muted); background: none;
+}
+.back-btn:hover { border-color: var(--blue); color: var(--blue); }
+.form-container { width: 100%; max-width: 370px; position: relative; z-index: 1; }
+.tab-toggle { display: flex; background: var(--toggle-bg); border-radius: 50px; padding: 4px; margin-bottom: 28px; position: relative; }
+.tab-toggle .tab-slider {
+  position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+  background: linear-gradient(135deg, var(--blue), var(--blue-light)); border-radius: 50px;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 3px 10px rgba(26,110,245,0.35);
+}
+.tab-toggle.signup-active .tab-slider { transform: translateX(100%); }
+.tab-btn {
+  flex: 1; padding: 11px 0; border: none; background: none;
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; border-radius: 50px; position: relative; z-index: 1; transition: color 0.3s; color: var(--text-muted);
+}
+.tab-btn.active { color: #fff; }
+.form-heading { margin-bottom: 4px; font-family: 'Nunito', sans-serif; font-size: 27px; font-weight: 900; color: var(--text); letter-spacing: -0.3px; animation: fade-up 0.4s ease both; }
+.form-heading span { color: var(--orange); }
+.form-subtext { font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px; animation: fade-up 0.4s 0.05s ease both; }
+.form-subtext a { color: var(--blue); text-decoration: none; font-weight: 600; }
+.input-group { position: relative; margin-bottom: 14px; animation: fade-up 0.4s ease both; }
+.input-group:nth-child(1) { animation-delay: 0.1s; }
+.input-group:nth-child(2) { animation-delay: 0.15s; }
+.input-group:nth-child(3) { animation-delay: 0.2s; }
+.input-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.4px; text-transform: uppercase; }
+.input-wrap { position: relative; }
+.input-wrap input {
+  width: 100%; padding: 12px 16px; padding-right: 44px;
+  border: 1.5px solid var(--input-bdr); border-radius: 12px; background: var(--input-bg);
+  font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: all 0.25s;
+}
+.input-wrap input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 4px rgba(26,110,245,0.1); }
+.input-wrap input::placeholder { color: #a0b0d0; }
+.input-icon { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: #a0b0d0; cursor: pointer; display: flex; align-items: center; transition: color 0.2s; }
+.input-icon:hover { color: var(--blue); }
+.input-icon svg { width: 17px; height: 17px; }
+.forgot { text-align: right; margin-top: -4px; margin-bottom: 16px; animation: fade-up 0.4s 0.25s ease both; }
+.forgot a { font-size: 13px; color: var(--blue); text-decoration: none; font-weight: 600; }
+.terms-row { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; animation: fade-up 0.4s 0.3s ease both; }
+.terms-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+.terms-row label { font-size: 12.5px; color: var(--text-muted); cursor: pointer; }
+.terms-row label a { color: var(--blue); text-decoration: none; font-weight: 600; }
+.btn-primary {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+  color: #fff; border: none; border-radius: 13px;
+  font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800;
+  cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden;
+  margin-bottom: 16px; animation: fade-up 0.4s 0.35s ease both;
+  box-shadow: 0 4px 16px rgba(26,110,245,0.3);
+}
+.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent); opacity: 0; transition: opacity 0.2s; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,110,245,0.4); }
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary:active { transform: translateY(0); }
+.divider { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; animation: fade-up 0.4s 0.4s ease both; }
+.divider-line { flex: 1; height: 1px; background: #dde8ff; }
+.divider span { font-size: 12px; color: #a0b0d0; }
+.social-row { display: flex; gap: 11px; width:100%; }
+.btn-social {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 12px; border: 1.5px solid var(--input-bdr); border-radius: 11px; background: #fff;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.2s;
+}
+.btn-social:hover { border-color: var(--blue); background: var(--input-bg); }
+.btn-social svg { width: 18px; height: 18px; flex-shrink: 0; }
+.form-view { display: none; }
+.form-view.active { display: block; animation: fade-up 0.35s ease both; }
+.name-row { display: flex; gap: 11px; }
+.name-row .input-group { flex: 1; }
+
+/* ANIMATIONS */
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade-in-down { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bubble-rise { 0% { transform: translateY(100%) scale(0.5); opacity: 0; } 15% { opacity: 0.6; } 85% { opacity: 0.4; } 100% { transform: translateY(-120%) scale(1.2); opacity: 0; } }
+@keyframes dust-twinkle { 0%, 100% { transform: scale(0.5); opacity: 0.2; } 50% { transform: scale(1.5); opacity: 0.9; } }
+@keyframes ray-sweep { 0%, 100% { opacity: 0.4; transform: skewX(-5deg); } 50% { opacity: 1; transform: skewX(5deg); } }
+@keyframes mop-sweep { 0%, 100% { transform: rotate(-18deg) translateX(0); } 50% { transform: rotate(12deg) translateX(10px); } }
+@keyframes arm-move { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(20deg); } }
+@keyframes body-sway { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+@keyframes bucket-wobble { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes bubble-pop { 0% { transform: scale(0); opacity: 0; } 40% { transform: scale(1.1); opacity: 1; } 70% { transform: scale(0.9); opacity: 0.8; } 100% { transform: scale(1.3); opacity: 0; } }
+@keyframes window-shine { 0% { transform: translateX(-100%) skewX(-15deg); opacity: 0; } 20% { opacity: 0.6; } 100% { transform: translateX(200%) skewX(-15deg); opacity: 0; } }
+@keyframes spray-burst { 0% { transform: scale(0) translate(0,0); opacity: 1; } 100% { transform: scale(1.5) translate(var(--sx), var(--sy)); opacity: 0; } }
+@keyframes dust-fly { 0% { transform: translate(0,0) scale(1); opacity: 0.8; } 100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; } }
+@keyframes float-up-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes cinematic-badge { 0%, 15% { opacity: 0; transform: translateY(8px) scale(0.95); } 25%, 75% { opacity: 1; transform: translateY(0) scale(1); } 85%, 100% { opacity: 0; transform: translateY(-6px) scale(0.95); } }
+@keyframes tool-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+@keyframes worker-card-appear { 0%, 12% { opacity: 0; transform: translateX(-18px); } 22%, 78% { opacity: 1; transform: translateX(0); } 88%, 100% { opacity: 0; transform: translateX(18px); } }
+@keyframes verified-glow { 0%, 100% { filter: drop-shadow(0 0 3px rgba(26,200,80,0.4)); } 50% { filter: drop-shadow(0 0 9px rgba(26,200,80,0.95)); } }
+@keyframes location-ping { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(2.8); opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="left-bg"></div>
+  <div class="light-rays"><div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div></div>
+  <div class="grid-overlay"></div>
+  <div class="bubbles" id="bubbles"></div>
+  <div class="dust" id="dustEl"></div>
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    <span class="brand-name">Sewa<span>-Sathi</span></span>
+  </div>
+
+  <!-- Nepal badge top-right -->
+  <div class="nepal-badge">
+    
+    <div>
+      <div class="badge-text">Trusted in Nepal</div>
+      <div class="badge-sub">Verified Local Workers</div>
+    </div>
+  </div>
+
+  <!-- SVG Scene -->
+  <div class="scene-wrap">
+    <svg viewBox="0 0 560 430" width="560" height="430" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- FLOOR -->
+      <rect x="20" y="322" width="520" height="15" rx="4" fill="#1a3a8a" opacity="0.4"/>
+      <line x1="50"  y1="325" x2="120" y2="325" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="210" y1="325" x2="300" y2="325" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="370" y1="325" x2="460" y2="325" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-linecap="round"/>
+
+      <!-- BACKGROUND BUILDING -->
+      <rect x="70" y="55" width="105" height="170" rx="4" fill="rgba(26,46,120,0.22)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+      <rect x="82" y="70" width="36" height="30" rx="2" fill="rgba(255,255,255,0.06)"/>
+      <rect x="128" y="70" width="36" height="30" rx="2" fill="rgba(255,255,255,0.06)"/>
+      <rect x="82" y="114" width="36" height="30" rx="2" fill="rgba(90,157,255,0.13)"/>
+      <rect x="128" y="114" width="36" height="30" rx="2" fill="rgba(255,122,26,0.1)"/>
+      <rect x="70" y="55" width="28" height="170" rx="0" fill="rgba(255,255,255,0.03)" style="animation: window-shine 7s linear 2.5s infinite;"/>
+
+      <!-- LOCATION PIN -->
+      <g transform="translate(272, 52)">
+        <circle cx="0" cy="0" r="9" fill="none" stroke="rgba(255,122,26,0.55)" stroke-width="2" style="animation: location-ping 2.2s 0s ease-out infinite;"/>
+        <circle cx="0" cy="0" r="9" fill="none" stroke="rgba(255,122,26,0.35)" stroke-width="1.5" style="animation: location-ping 2.2s 0.55s ease-out infinite;"/>
+        <path d="M0 -21 C-12 -21 -19 -13 -19 -4 C-19 9 0 23 0 23 C0 23 19 9 19 -4 C19 -13 12 -21 0 -21Z" fill="#ff7a1a" stroke="#e05f00" stroke-width="1.5"/>
+        <circle cx="0" cy="-5" r="6.5" fill="#fff" opacity="0.9"/>
+        <circle cx="0" cy="-5" r="3" fill="#ff7a1a"/>
+      </g>
+
+      <!-- WORKER CARD POPUP -->
+      <g transform="translate(342, 54)" style="animation: worker-card-appear 7s 1.5s ease-in-out infinite;">
+        <rect x="0" y="0" width="135" height="54" rx="10" fill="rgba(10,25,80,0.55)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+        <circle cx="27" cy="27" r="17" fill="#ff7a1a" opacity="0.88"/>
+        <circle cx="27" cy="21" r="6.5" fill="#f5cba0"/>
+        <path d="M14 36 Q27 28 40 36" fill="#1a6ef5"/>
+        <circle cx="39" cy="14" r="7.5" fill="#1db954" style="animation: verified-glow 2s ease-in-out infinite;"/>
+        <text x="39" y="18" text-anchor="middle" font-size="8" fill="#fff" font-weight="900">✓</text>
+        <text x="52" y="23" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#fff">Ram Bahadur</text>
+        <text x="52" y="35" font-size="8.5" font-family="Inter,sans-serif" fill="rgba(255,255,255,0.52)">Plumber • 4.9★</text>
+        <text x="52" y="47" font-size="8" font-family="Inter,sans-serif" fill="rgba(255,170,90,0.8)">📍 2.3 km away</text>
+      </g>
+
+      <!-- WORKER 1: PLUMBER (left, orange vest, holding wrench) -->
+      <g transform="translate(122, 50)">
+        <!-- WRENCH animated -->
+        <g style="animation: mop-sweep 2.4s ease-in-out infinite; transform-origin: 82px 118px;">
+          <rect x="74" y="104" width="8" height="94" rx="4" fill="#8899bb"/>
+          <rect x="63" y="98" width="30" height="20" rx="7" fill="#6677aa"/>
+          <rect x="65" y="100" width="26" height="9" rx="4" fill="#8899cc"/>
+          <rect x="63" y="117" width="13" height="24" rx="4" fill="#5566aa"/>
+          <rect x="74" y="107" width="3" height="44" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+        </g>
+        <!-- BODY -->
+        <g style="animation: body-sway 2.4s ease-in-out infinite; transform-origin: 82px 185px;">
+          <rect x="65" y="226" width="17" height="58" rx="8.5" fill="#1a3070"/>
+          <rect x="86" y="230" width="17" height="54" rx="8.5" fill="#243a8a"/>
+          <ellipse cx="73" cy="284" rx="13" ry="7" fill="#0d1220"/>
+          <ellipse cx="95" cy="283" rx="12" ry="6" fill="#0d1220"/>
+          <!-- orange work vest -->
+          <rect x="52" y="138" width="72" height="94" rx="18" fill="#1a6ef5"/>
+          <rect x="52" y="157" width="72" height="7" rx="3" fill="#1055cc" opacity="0.65"/>
+          <rect x="78" y="174" width="22" height="20" rx="3" fill="rgba(255,255,255,0.18)"/>
+          <!-- belt -->
+          <rect x="55" y="229" width="42" height="5" rx="2.5" fill="#e05f00"/>
+          <rect x="68" y="231" width="10" height="8" rx="2" fill="#cc4400"/>
+          <!-- right arm -->
+          <g style="animation: arm-move 2.4s ease-in-out infinite; transform-origin: 52px 150px;">
+            <rect x="30" y="142" width="25" height="52" rx="12.5" fill="#1a6ef5"/>
+            <circle cx="41" cy="196" r="10.5" fill="#c8956c"/>
+          </g>
+          <!-- left arm -->
+          <g style="animation: arm-move 2.4s 1.2s ease-in-out reverse infinite; transform-origin: 124px 150px;">
+            <rect x="124" y="144" width="25" height="50" rx="12.5" fill="#1055cc"/>
+            <circle cx="136" cy="196" r="10.5" fill="#c8956c"/>
+          </g>
+          <!-- HEAD -->
+          <circle cx="88" cy="112" r="31" fill="#c8956c"/>
+          <ellipse cx="88" cy="89" rx="31" ry="16" fill="#2a1400"/>
+          <ellipse cx="63" cy="99" rx="9.5" ry="14" fill="#2a1400"/>
+          <ellipse cx="113" cy="99" rx="9.5" ry="14" fill="#2a1400"/>
+          <circle cx="79" cy="114" r="4.2" fill="#fff"/>
+          <circle cx="98" cy="114" r="4.2" fill="#fff"/>
+          <circle cx="80" cy="114" r="2.3" fill="#2a1400"/>
+          <circle cx="99" cy="114" r="2.3" fill="#2a1400"/>
+          <path d="M78 125 Q88 135 98 125" stroke="#9a5020" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="68" cy="122" rx="6" ry="4" fill="rgba(200,100,50,0.28)"/>
+          <ellipse cx="107" cy="122" rx="6" ry="4" fill="rgba(200,100,50,0.28)"/>
+          <!-- ORANGE HARDHAT -->
+          <ellipse cx="88" cy="93" rx="35" ry="10" fill="#ff7a1a"/>
+          <rect x="55" y="88" width="66" height="14" rx="7" fill="#ff7a1a"/>
+          <ellipse cx="88" cy="88" rx="33" ry="8" fill="#ffaa5a"/>
+          <circle cx="88" cy="90" r="7.5" fill="#1a6ef5"/>
+          <text x="88" y="93.5" text-anchor="middle" font-size="5.5" font-family="Nunito" font-weight="900" fill="#fff">SS</text>
+        </g>
+      </g>
+
+      <!-- WORKER 2: CLEANER (center, orange vest, mop) -->
+      <g transform="translate(240, 52)">
+        <!-- MOP -->
+        <g style="animation: mop-sweep 1.8s 0.4s ease-in-out infinite; transform-origin: 52px 110px;">
+          <line x1="52" y1="108" x2="16" y2="275" stroke="#c8a068" stroke-width="6" stroke-linecap="round"/>
+          <g transform="translate(4, 264)">
+            <ellipse cx="12" cy="12" rx="22" ry="8" fill="rgba(255,255,255,0.13)"/>
+            <line x1="-8"  y1="6" x2="-8"  y2="22" stroke="#ccd8ee" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+            <line x1="-2"  y1="5" x2="-2"  y2="22" stroke="#ccd8ee" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+            <line x1="4"   y1="5" x2="4"   y2="22" stroke="#ccd8ee" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+            <line x1="10"  y1="6" x2="10"  y2="22" stroke="#ccd8ee" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+            <line x1="16"  y1="7" x2="16"  y2="22" stroke="#ccd8ee" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+            <line x1="22"  y1="8" x2="22"  y2="22" stroke="#ccd8ee" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+            <ellipse cx="8" cy="24" rx="20" ry="5" fill="rgba(255,255,255,0.18)"/>
+          </g>
+        </g>
+        <!-- BODY -->
+        <g style="animation: body-sway 1.8s 0.2s ease-in-out infinite; transform-origin: 52px 178px;">
+          <rect x="39" y="225" width="16" height="54" rx="8" fill="#1a6ef5"/>
+          <rect x="59" y="229" width="16" height="50" rx="8" fill="#1055cc"/>
+          <ellipse cx="47" cy="279" rx="12" ry="6" fill="#0d1f4a"/>
+          <ellipse cx="67" cy="278" rx="11" ry="6" fill="#0d1f4a"/>
+          <!-- orange vest -->
+          <rect x="26" y="136" width="64" height="94" rx="17" fill="#ff7a1a"/>
+          <rect x="26" y="155" width="64" height="7" rx="3" fill="#e05f00" opacity="0.65"/>
+          <rect x="46" y="172" width="20" height="17" rx="3" fill="rgba(255,255,255,0.22)"/>
+          <!-- arms -->
+          <g style="animation: arm-move 1.8s 0.4s ease-in-out infinite; transform-origin: 26px 152px;">
+            <rect x="5" y="144" width="24" height="48" rx="12" fill="#ff7a1a"/>
+            <circle cx="16" cy="194" r="9.5" fill="#c8956c"/>
+          </g>
+          <g style="animation: arm-move 1.8s 1.3s ease-in-out reverse infinite; transform-origin: 90px 152px;">
+            <rect x="90" y="144" width="24" height="46" rx="12" fill="#e05f00"/>
+            <circle cx="104" cy="192" r="9.5" fill="#c8956c"/>
+          </g>
+          <!-- HEAD (female with hijab) -->
+          <circle cx="58" cy="106" r="29" fill="#c8956c"/>
+          <ellipse cx="58" cy="87" rx="33" ry="20" fill="#1a6ef5"/>
+          <path d="M27 92 Q32 124 37 130 Q47 138 58 135 Q69 138 79 130 Q84 124 89 92 Q73 84 58 82 Q43 84 27 92Z" fill="#1a6ef5"/>
+          <path d="M87 92 Q93 118 85 132" stroke="#1055cc" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="49" cy="108" r="3.7" fill="#fff"/>
+          <circle cx="66" cy="108" r="3.7" fill="#fff"/>
+          <circle cx="50" cy="108" r="2.1" fill="#2a1400"/>
+          <circle cx="67" cy="108" r="2.1" fill="#2a1400"/>
+          <path d="M49 118 Q58 126 67 118" stroke="#9a5020" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="40" cy="114" rx="5" ry="3.5" fill="rgba(200,100,50,0.26)"/>
+          <ellipse cx="75" cy="114" rx="5" ry="3.5" fill="rgba(200,100,50,0.26)"/>
+        </g>
+      </g>
+
+      <!-- WORKER 3: ELECTRICIAN (right, dark jacket, drill) -->
+      <g transform="translate(355, 52)">
+        <!-- DRILL -->
+        <g style="animation: tool-float 2.6s 0.9s ease-in-out infinite;">
+          <rect x="74" y="103" width="42" height="21" rx="6" fill="#383838"/>
+          <rect x="82" y="93" width="26" height="15" rx="4" fill="#2a2a2a"/>
+          <rect x="112" y="106" width="20" height="7" rx="3" fill="#4a4a4a"/>
+          <rect x="130" y="104" width="7" height="11" rx="2" fill="#888"/>
+          <line x1="135" y1="109" x2="155" y2="109" stroke="#aaa" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="86" cy="100" r="3.5" fill="#00ff88" opacity="0.9" style="animation: dust-twinkle 1.6s ease-in-out infinite;"/>
+        </g>
+        <!-- BODY -->
+        <g style="animation: body-sway 2.6s 0.6s ease-in-out infinite; transform-origin: 90px 188px;">
+          <rect x="74" y="224" width="16" height="56" rx="8" fill="#1a3070"/>
+          <rect x="95" y="228" width="16" height="52" rx="8" fill="#243a8a"/>
+          <ellipse cx="82" cy="280" rx="12" ry="6" fill="#0d1220"/>
+          <ellipse cx="103" cy="279" rx="11" ry="6" fill="#0d1220"/>
+          <!-- dark work jacket -->
+          <rect x="58" y="137" width="68" height="92" rx="17" fill="#1a2a4a"/>
+          <rect x="58" y="156" width="68" height="7" rx="3" fill="#0d1f3a" opacity="0.8"/>
+          <!-- reflective stripe -->
+          <rect x="58" y="177" width="68" height="5" rx="2" fill="rgba(255,200,80,0.45)"/>
+          <!-- SS chest badge -->
+          <rect x="74" y="162" width="24" height="15" rx="3" fill="#ff7a1a" opacity="0.9"/>
+          <text x="86" y="172.5" text-anchor="middle" font-size="7" font-family="Nunito" font-weight="900" fill="#fff">SS</text>
+          <!-- arms -->
+          <g style="animation: arm-move 2.6s 0.9s ease-in-out infinite; transform-origin: 58px 152px;">
+            <rect x="36" y="144" width="26" height="47" rx="13" fill="#1a2a4a"/>
+            <circle cx="47" cy="193" r="10.5" fill="#c8956c"/>
+          </g>
+          <g style="animation: arm-move 2.6s 1.7s ease-in-out reverse infinite; transform-origin: 126px 152px;">
+            <rect x="126" y="144" width="26" height="46" rx="13" fill="#1a2a4a"/>
+            <circle cx="140" cy="192" r="10.5" fill="#c8956c"/>
+          </g>
+          <!-- HEAD -->
+          <circle cx="92" cy="106" r="30" fill="#a06040"/>
+          <ellipse cx="92" cy="83" rx="30" ry="15" fill="#180800"/>
+          <ellipse cx="68" cy="93" rx="9" ry="13" fill="#180800"/>
+          <ellipse cx="116" cy="93" rx="9" ry="13" fill="#180800"/>
+          <circle cx="83" cy="108" r="4" fill="#fff"/>
+          <circle cx="102" cy="108" r="4" fill="#fff"/>
+          <circle cx="84" cy="108" r="2.3" fill="#180800"/>
+          <circle cx="103" cy="108" r="2.3" fill="#180800"/>
+          <path d="M83 119 Q92 128 102 119" stroke="#804020" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="73" cy="116" rx="5.5" ry="3.5" fill="rgba(180,80,30,0.28)"/>
+          <ellipse cx="110" cy="116" rx="5.5" ry="3.5" fill="rgba(180,80,30,0.28)"/>
+          <!-- YELLOW HARDHAT -->
+          <ellipse cx="92" cy="86" rx="35" ry="10" fill="#ffd700"/>
+          <rect x="58" y="81" width="68" height="14" rx="7" fill="#ffd700"/>
+          <ellipse cx="92" cy="81" rx="34" ry="8" fill="#ffe44d"/>
+          <circle cx="92" cy="83" r="7.5" fill="#ff7a1a"/>
+          <text x="92" y="86.5" text-anchor="middle" font-size="5.5" font-family="Nunito" font-weight="900" fill="#fff">SS</text>
+        </g>
+      </g>
+
+      <!-- BUCKET (left) -->
+      <g transform="translate(56, 260)" style="animation: bucket-wobble 3s ease-in-out infinite; transform-origin: 28px 40px;">
+        <path d="M8 15 L4 50 Q4 55 14 55 L42 55 Q52 55 52 50 L48 15 Z" fill="#ff7a1a" stroke="#e05f00" stroke-width="1.5"/>
+        <rect x="5" y="12" width="46" height="8" rx="4" fill="#ffaa5a" stroke="#e05f00" stroke-width="1"/>
+        <path d="M14 12 Q28 -2 42 12" stroke="#ccc" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="20" cy="25" rx="7" ry="5" fill="rgba(255,255,255,0.7)"/>
+        <ellipse cx="33" cy="22" rx="5" ry="4" fill="rgba(255,255,255,0.6)"/>
+        <ellipse cx="27" cy="32" rx="8" ry="5" fill="rgba(255,255,255,0.5)"/>
+        <rect x="15" y="32" width="26" height="16" rx="3" fill="rgba(255,255,255,0.3)"/>
+        <text x="28" y="43" text-anchor="middle" font-size="7" font-family="Nunito,sans-serif" font-weight="800" fill="#fff">SOAP</text>
+      </g>
+
+      <!-- TOOLBOX (right) -->
+      <g transform="translate(464, 258)" style="animation: bucket-wobble 3.5s 1s ease-in-out infinite; transform-origin: 30px 35px;">
+        <rect x="0" y="14" width="62" height="44" rx="6" fill="#e05f00" stroke="#c04000" stroke-width="1.5"/>
+        <rect x="0" y="14" width="62" height="10" rx="5" fill="#ff7a1a"/>
+        <path d="M18 14 Q31 2 44 14" stroke="#ccc" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <rect x="6" y="28" width="50" height="24" rx="3" fill="rgba(0,0,0,0.2)"/>
+        <rect x="10" y="32" width="13" height="12" rx="2" fill="#ffaa5a"/>
+        <rect x="27" y="32" width="10" height="12" rx="2" fill="#5a9dff"/>
+        <rect x="41" y="32" width="13" height="12" rx="2" fill="#ffaa5a"/>
+      </g>
+
+      <!-- FLOATING SERVICE BADGES -->
+      <g transform="translate(42, 148)" style="animation: float-up-soft 3.2s 0.4s ease-in-out infinite;">
+        <rect x="0" y="0" width="72" height="27" rx="13.5" fill="rgba(26,110,245,0.82)"/>
+        <text x="36" y="17.5" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#fff">🔧 Plumber</text>
+      </g>
+      <g transform="translate(460, 145)" style="animation: float-up-soft 3.2s 1.6s ease-in-out infinite;">
+        <rect x="0" y="0" width="90" height="27" rx="13.5" fill="rgba(255,200,0,0.82)"/>
+        <text x="45" y="17.5" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#1a1a00">⚡ Electrician</text>
+      </g>
+      <g transform="translate(212, 56)" style="animation: float-up-soft 3.2s 2.8s ease-in-out infinite;">
+        <rect x="0" y="0" width="78" height="27" rx="13.5" fill="rgba(255,122,26,0.82)"/>
+        <text x="39" y="17.5" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#fff">🧹 Cleaner</text>
+      </g>
+
+      <!-- VERIFIED BADGE (cinematic pop-in) -->
+      <g transform="translate(210, 302)" style="animation: cinematic-badge 5.5s 0.2s ease-in-out infinite;">
+        <rect x="0" y="0" width="140" height="30" rx="15" fill="rgba(29,185,84,0.88)"/>
+        <text x="70" y="20" text-anchor="middle" font-size="11" font-family="Nunito,sans-serif" font-weight="900" fill="#fff">✓ Workers Verified</text>
+      </g>
+
+      <!-- BOKEH BUBBLES -->
+      <circle cx="162" cy="185" r="10" fill="none" stroke="rgba(90,157,255,0.5)" stroke-width="1.5" style="animation: bubble-pop 3.6s 0.5s ease-in-out infinite;"/>
+      <circle cx="162" cy="185" r="5" fill="rgba(90,157,255,0.1)"/>
+      <circle cx="304" cy="148" r="8" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1.5" style="animation: bubble-pop 3.6s 1.4s ease-in-out infinite;"/>
+      <circle cx="460" cy="205" r="12" fill="none" stroke="rgba(255,200,80,0.42)" stroke-width="1.5" style="animation: bubble-pop 3.6s 0.9s ease-in-out infinite;"/>
+      <circle cx="516" cy="142" r="9" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1.5" style="animation: bubble-pop 3.6s 2.1s ease-in-out infinite;"/>
+
+      <!-- FLOOR SPARKLES -->
+      <text x="152" y="320" font-size="14" fill="rgba(255,200,80,0.65)" style="animation: dust-twinkle 1.8s 0.3s ease-in-out infinite;">✦</text>
+      <text x="248" y="319" font-size="10" fill="rgba(255,255,255,0.45)" style="animation: dust-twinkle 1.8s 0.9s ease-in-out infinite;">✦</text>
+      <text x="326" y="320" font-size="12" fill="rgba(255,200,80,0.55)" style="animation: dust-twinkle 1.8s 1.5s ease-in-out infinite;">✦</text>
+      <text x="426" y="319" font-size="9" fill="rgba(255,255,255,0.4)" style="animation: dust-twinkle 1.8s 0.6s ease-in-out infinite;">✦</text>
+    </svg>
+  </div>
+
+  <!-- Hero Text -->
+  <div class="hero-text">
+    <h1 class="hero-headline">Find Trusted Local Workers<br><em>Near You</em></h1>
+    <p class="hero-tagline">Book plumbers, electricians, carpenters, cleaners and repair experts easily from anywhere. Verified profiles, real workers, neighbourhood service.</p>
+    <div class="service-chips">
+      <div class="chip"><span>🔧</span> Plumbers</div>
+      <div class="chip"><span>⚡</span> Electricians</div>
+      <div class="chip"><span>🪵</span> Carpenters</div>
+      <div class="chip"><span>🧹</span> Cleaners</div>
+      <div class="chip"><span>🔨</span> Repair Experts</div>
+    </div>
+  </div>
+
+  <!-- Trusted strip -->
+  <div class="trusted-strip">
+    <span class="ts-label"> Trusted in Nepal</span>
+    <span class="trusted-star">★★★★★</span>
+    <span class="ts-label">Verified Workers • Neighbourhood Service</span>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="rp-accent"></div>
+  <button class="back-btn" aria-label="Go back">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+  </button>
+
+  <div class="form-container">
+    <div class="tab-toggle" id="tabToggle">
+      <div class="tab-slider"></div>
+      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="form-view active" id="loginView">
+      <h2 class="form-heading">Welcome <span>Back!</span></h2>
+      <p class="form-subtext">Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Create one free</a></p>
+      <div class="input-group">
+        <label class="input-label">Email Address</label>
+        <div class="input-wrap">
+          <input type="email" placeholder="you@example.com" autocomplete="email"/>
+          <span class="input-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="loginPass" placeholder="Enter your password"/>
+          <span class="input-icon" onclick="togglePass('loginPass', this)">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="forgot"><a href="#">Forgot Password?</a></div>
+      <div class="terms-row">
+        <input type="checkbox" id="agreeLogin" checked/>
+        <label for="agreeLogin">I agree to the <a href="#">Terms &amp; Conditions</a></label>
+      </div>
+      <button class="btn-primary">Log In →</button>
+      <div class="divider"><div class="divider-line"></div><span>or continue with</span><div class="divider-line"></div></div>
+      <div class="social-row">
+        <button class="btn-social">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+      </div>
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="form-view" id="signupView">
+      <h2 class="form-heading">Get <span>Started!</span></h2>
+      <p class="form-subtext">Already have one? <a href="#" onclick="switchTab('login'); return false;">Sign in here</a></p>
+      <div class="name-row">
+        <div class="input-group">
+          <label class="input-label">First Name</label>
+          <div class="input-wrap"><input type="text" placeholder="Jane"/></div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Last Name</label>
+          <div class="input-wrap"><input type="text" placeholder="Doe"/></div>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Email Address</label>
+        <div class="input-wrap">
+          <input type="email" placeholder="you@example.com"/>
+          <span class="input-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="signupPass" placeholder="Create a strong password"/>
+          <span class="input-icon" onclick="togglePass('signupPass', this)">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="terms-row" style="margin-top:2px;">
+        <input type="checkbox" id="agreeSignup" checked/>
+        <label for="agreeSignup">I agree to the <a href="#">Terms &amp; Conditions</a></label>
+      </div>
+      <button class="btn-primary">Create Account →</button>
+      <div class="divider"><div class="divider-line"></div><span>or sign up with</span><div class="divider-line"></div></div>
+      <div class="social-row">
+        <button class="btn-social">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+       
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function switchTab(tab) {
+  const toggle = document.getElementById('tabToggle');
+  const lv = document.getElementById('loginView');
+  const sv = document.getElementById('signupView');
+  const tl = document.getElementById('tabLogin');
+  const ts = document.getElementById('tabSignup');
+  if (tab === 'login') {
+    toggle.classList.remove('signup-active');
+    tl.classList.add('active'); ts.classList.remove('active');
+    lv.classList.add('active'); sv.classList.remove('active');
+  } else {
+    toggle.classList.add('signup-active');
+    ts.classList.add('active'); tl.classList.remove('active');
+    sv.classList.add('active'); lv.classList.remove('active');
+  }
+}
+
+function togglePass(id, el) {
+  const inp = document.getElementById(id);
+  const hidden = inp.type === 'password';
+  inp.type = hidden ? 'text' : 'password';
+  el.innerHTML = hidden
+    ? `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+    : `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="17" height="17"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+}
+
+const bwrap = document.getElementById('bubbles');
+const bColors = ['rgba(90,157,255,0.5)','rgba(255,255,255,0.4)','rgba(255,170,90,0.45)','rgba(130,190,255,0.5)'];
+for (let i = 0; i < 20; i++) {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const s = 6 + Math.random() * 16;
+  const c = bColors[Math.floor(Math.random() * bColors.length)];
+  b.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:${-s}px;border:1.5px solid ${c};background:radial-gradient(circle at 35% 35%,rgba(255,255,255,0.3),transparent 70%);animation-duration:${6+Math.random()*9}s;animation-delay:${Math.random()*8}s;`;
+  bwrap.appendChild(b);
+}
+
+const dEl = document.getElementById('dustEl');
+const dColors = ['#ff7a1a','#1a6ef5','#fff','#ffaa5a','#5a9dff','#ffd700'];
+for (let i = 0; i < 18; i++) {
+  const d = document.createElement('div');
+  d.className = 'dust-dot';
+  const c = dColors[Math.floor(Math.random() * dColors.length)];
+  d.style.cssText = `left:${Math.random()*90}%;top:${Math.random()*90}%;background:${c};animation-delay:${Math.random()*2.5}s;animation-duration:${1.8+Math.random()*1.5}s;`;
+  dEl.appendChild(d);
+}
+</script>
+</body>
+</html>
